@@ -7,4 +7,8 @@ services:
       - 3000:3000
     volumes:
       - ./:/app
-    command: "npm run dev"
+    command:
+      - "bash"
+      - "-c"
+      - "npm install --verbose
+         && npm run dev"
