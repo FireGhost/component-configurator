@@ -1,24 +1,19 @@
 <script setup lang="ts">
-const state = reactive<{
-  fieldType: string,
-  parameters: string[],
-}>({
-  fieldType: "",
-  parameters: [],
-});
+const name = defineModel<string>('name');
+const parameters = defineModel<string[]>('parameters', {default: []});
 
 function addParameter() {
-  state.parameters.push("");
+  parameters.value.push("");
 }
 </script>
 
 <template>
-  <UFormField label="Field type">
-    <UInput v-model="state.fieldType" />
+  <UFormField label="Field type name">
+    <UInput v-model="name" />
   </UFormField>
 
-  <UFormField v-for="(param, i) in state.parameters" :key="i" label="Param">
-    <UInput v-model="state.parameters[i]" /><UButton />
+  <UFormField v-for="(param, i) in parameters" :key="i" label="Parameter name">
+    <UInput v-model="parameters[i]" />
   </UFormField>
   
   <UButton @click="addParameter">Add field parameter</UButton>

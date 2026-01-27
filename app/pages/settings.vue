@@ -1,19 +1,26 @@
 <script setup lang="ts">
-const state = reactive<{
-  fields: string[],
-}>({
-  fields: [],
-});
+const fieldTypes = useState<{
+  name: string,
+  parameters: string[],
+}[]>('fieldTypes', () => ([]));
 
 function addField() {
-  state.fields.push("");
+  fieldTypes.value.push({
+    name: '',
+    parameters: [],
+  });
 }
 </script>
 
 <template>
   <UForm>
     
-    <FieldTypeForm v-for="(field, i) in state.fields" :key="i" />
+    <FieldTypeForm
+      v-for="(field, i) in fieldTypes"
+      :key="i"
+      v-model:name="field.name"
+      v-model:parameters="field.parameters"
+    />
 
     <UButton @click="addField">Add field</UButton>
 
