@@ -8,13 +8,15 @@ function addParameter() {
 </script>
 
 <template>
-  <UFormField label="Field type name">
-    <UInput v-model="name" />
-  </UFormField>
+  <div>
+    <UFormField label="Field type name" class="mb-4">
+      <UInput v-model="name" />
+    </UFormField>
 
-  <UFormField v-for="(param, i) in parameters" :key="i" label="Parameter name">
-    <UInput v-model="parameters[i]" />
-  </UFormField>
-  
-  <UButton @click="addParameter">Add field parameter</UButton>
+    <UFormField v-for="(param, i) in parameters" :key="i" label="Parameter name">
+      <UInput v-model="parameters[i]" />
+    </UFormField>
+    
+    <UButton @click="addParameter" class="mt-4">Add field parameter</UButton>
+  </div>
 </template>
