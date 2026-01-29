@@ -3,14 +3,14 @@ const componentTitle = defineModel<string>('componentTitle', {default: ''});
 const fields = defineModel<{
   fieldName: string,
   fieldTypeName: string,
-  fieldParametersValues: string[],
+  fieldParametersValues: {[key: string]: string},
 }[]>('fields', {default: []});
 
 function addField() {
   fields.value.push({
     fieldName: '',
     fieldTypeName: '',
-    fieldParametersValues: [],
+    fieldParametersValues: {},
   });
 }
 </script>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const fieldName = defineModel<string>('fieldName', {default: ''});
 const fieldTypeName = defineModel<string>('fieldTypeName', {default: ''});
-const fieldParametersValues = defineModel<string[]>('fieldParametersValues', {default: []});
+const fieldParametersValues = defineModel<{[key: string]: string}>('fieldParametersValues', {default: {}});
 
 const fieldTypes = ref<{
   name: string,
@@ -29,7 +29,7 @@ if (localStorageItem) {
       :label="fieldParameter"
       :name="`${fieldName}-${fieldParameter}-${i}`"
     >
-      <UInput v-model="fieldParametersValues[i]" />
+      <UInput v-model="fieldParametersValues[fieldParameter]" />
     </UFormField>
   </UCard>
 </template>

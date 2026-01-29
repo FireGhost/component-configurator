@@ -3,6 +3,7 @@ const fieldTypes = ref<{
   name: string,
   parameters: string[],
 }[]>([]);
+const importExportInput = ref('');
 
 const toast = useToast();
 
@@ -18,16 +19,39 @@ function addField() {
   });
 }
 
-function save() {
-  // Remove empty names and empty parameters.
+function trimInputs() {
   fieldTypes.value = fieldTypes.value.filter((fieldType) => fieldType.name);
   fieldTypes.value.forEach((fieldType) => {
     fieldType.parameters = fieldType.parameters.filter((fieldParameter) => fieldParameter);
   });
+}
 
+function save() {
+  trimInputs();
   const fieldTypesJson = JSON.stringify(fieldTypes.value);
   localStorage.setItem('fieldTypes', fieldTypesJson);
   toast.add({ title: 'Settings saved' });
+}
+
+function exportSettings() {
+  trimInputs();
+  importExportInput.value = JSON.stringify(fieldTypes.value);
+}
+
+function importSettings() {
+  try {
+    fieldTypes.value = JSON.parse(importExportInput.value);
+  }
+  catch (e) {
+    console.log(e);
+    toast.add({
+      title: 'There is a syntax error in the JSON provided',
+      color: "error",
+    });
+    return;
+  }
+  save();
+  toast.add({ title: 'Settings imported' });
 }
 </script>
 
@@ -42,10 +66,21 @@ function save() {
       </UCard>
 
       <UCard>
-        <UButton @click="addField()">Add field</UButton>
+        <UButton @click="addField()">Add field type</UButton>
       </UCard>
     </div>
 
-    <UButton @click="save()" class="w-32 justify-center">Save</UButton>
+    <UButton @click="save()" class="w-32 justify-center mr-4">Save</UButton>
+
+    <UModal>
+      <UButton @click="exportSettings()">Import / Export</UButton>
+
+      <template #body>
+        <UTextarea class="w-full" size="sm" :rows="5" autoresize v-model="importExportInput" />
+      </template>
+      <template #footer="{close}">
+        <UButton @click="importSettings(); close()">Import</UButton>
+      </template>
+    </UModal>
   </div>
 </template>

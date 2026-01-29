@@ -1,16 +1,22 @@
 <script setup lang="ts">
-import { Buffer } from "buffer";
-
 const components = ref<{
   componentTitle: string,
   fields: {
     fieldName: string,
     fieldTypeName: string,
-    fieldParametersValues: string[],
+    fieldParametersValues: {[key: string]: string},
   }[],
 }[]>([]);
+const importExportInput = ref('');
+const exportViewTypes = ['View', 'JSON'];
+const selectedExportViewType = ref('View');
 
-const route = useRoute();
+const componentsFromStorage = localStorage.getItem('components');
+if (componentsFromStorage) {
+  components.value = JSON.parse(componentsFromStorage);
+}
+
+const toast = useToast();
 
 function addComponent() {
   components.value.push({
@@ -19,21 +25,45 @@ function addComponent() {
   });
 }
 
-function save() {
+function trimInputs() {
   // Remove component with no title.
   components.value = components.value.filter((component) => component.componentTitle);
   // Remove fields with no title or no field type.
-  components.value.forEach((component, index) => {
+  components.value.forEach((component) => {
     component.fields = component.fields.filter((field) => field.fieldName && field.fieldTypeName);
   });
+}
 
+function save() {
+  trimInputs();
   const componentsJson = JSON.stringify(components.value);
-  console.log(componentsJson);
-  console.log(btoa(componentsJson));
-  console.log(Buffer.from(componentsJson, 'binary').toString('base64'));
-  
+  localStorage.setItem('components', componentsJson);
+  toast.add({ title: "Components saved" });
+}
 
-  //route.query.data = atob(componentsJson);
+function exportComponents() {
+  trimInputs();
+  importExportInput.value = JSON.stringify(components.value);
+}
+
+function importComponents() {
+  try {
+    components.value = JSON.parse(importExportInput.value);
+  }
+  catch (e) {
+    console.log(e);
+    toast.add({
+      title: 'There is a syntax error in the JSON provided',
+      color: "error",
+    });
+    return;
+  }
+  save();
+  toast.add({ title: 'Components imported' });
+}
+
+function clear() {
+  components.value = [];
 }
 </script>
 
@@ -48,6 +78,27 @@ function save() {
 
     <UButton @click="addComponent()" class="mt-4">Add component</UButton>
 
-    <UButton @click="save()" class="block mt-4 w-64 justify-center">Save</UButton>
+    <div class="mt-6">
+      <UButton @click="save()" class="w-64 justify-center">Save</UButton>
+
+      <UModal>
+        <UButton @click="exportComponents()" class="ml-2">Import / Export</UButton>
+
+        <template #header>
+          <URadioGroup variant="table" orientation="horizontal" :items="exportViewTypes" v-model="selectedExportViewType" />
+        </template>
+        <template #body>
+
+          <ViewComponents v-if="selectedExportViewType === 'View'" :components="components" />
+          <UTextarea v-if="selectedExportViewType === 'JSON'" class="w-full" size="sm" :rows="5" autoresize v-model="importExportInput" />
+          
+        </template>
+        <template #footer="{close}" v-if="selectedExportViewType === 'JSON'">
+          <UButton @click="importComponents(); close()">Import</UButton>
+        </template>
+      </UModal>
+
+      <UButton @click="clear()" color="error" class="ml-4">Clear</UButton>
+    </div>
   </UForm>
 </template>
