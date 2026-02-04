@@ -76,12 +76,12 @@ function clear() {
       v-model:fields="component.fields"
     />
 
-    <UButton @click="addComponent()" class="mt-4">Add component</UButton>
+    <UButton @click="addComponent()" class="mt-4" variant="outline">Add component</UButton>
 
     <div class="mt-6">
       <UButton @click="save()" class="w-64 justify-center">Save</UButton>
 
-      <UModal>
+      <UModal :ui="{content: 'max-w-full min-w-lg w-max'}">
         <UButton @click="exportComponents()" class="ml-2">Import / Export</UButton>
 
         <template #header>

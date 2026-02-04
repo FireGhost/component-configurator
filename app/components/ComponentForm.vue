@@ -33,6 +33,6 @@ function addField() {
       />
     </div>
   
-    <UButton @click="addField()" class="mt-4">Add field</UButton>
+    <UButton @click="addField()" class="mt-4" variant="outline">Add field</UButton>
   </UCard>
 </template>

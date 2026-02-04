@@ -13,18 +13,20 @@ const { components } = defineProps<{
 
 <template>
   <ul>
-    <li v-for="(component, i) in components" :key="i">
+    <li v-for="(component, componentIndex) in components" :key="componentIndex" class="mb-4">
       {{ component.componentTitle }}
-      <ul>
-        <li v-for="(field, y) in component.fields" :key="y">
-          {{ field.fieldName }}: {{ field.fieldTypeName }}
-          <ul>
-            <li v-for="(parameterValue, parameterName) in field.fieldParametersValues" :key="parameterName">
-              {{ parameterName }}: {{ parameterValue }}
-            </li>
-          </ul>
+
+      <ul class="list-disc pl-4">
+        <li v-for="(field, fieldIndex) in component.fields" :key="fieldIndex">
+          {{ field.fieldName }}: <{{ field.fieldTypeName }}>
+
+          <template v-for="(parameterValue, parameterName) in field.fieldParametersValues" :key="parameterName">
+            //&nbsp;{{ parameterName }}: {{ parameterValue }}
+          </template>
+
         </li>
       </ul>
+
     </li>
   </ul>
 </template>

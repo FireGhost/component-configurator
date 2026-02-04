@@ -17,6 +17,6 @@ function addParameter() {
       <UInput v-model="parameters[i]" />
     </UFormField>
     
-    <UButton @click="addParameter" class="mt-4">Add field parameter</UButton>
+    <UButton @click="addParameter" class="mt-4" variant="outline">Add field parameter</UButton>
   </div>
 </template>

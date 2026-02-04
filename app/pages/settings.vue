@@ -66,7 +66,7 @@ function importSettings() {
       </UCard>
 
       <UCard>
-        <UButton @click="addField()">Add field type</UButton>
+        <UButton @click="addField()" variant="outline">Add field type</UButton>
       </UCard>
     </div>
 
