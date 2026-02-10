@@ -130,43 +130,47 @@ function removeProject(projectId: number) {
     
     <UButton class="ml-4" color="success" @click="addProject()">Add project</UButton>
 
-    <UCard :ui="{body: 'flex'}">
-      <UFormField orientation="horizontal" label="Project name" name="project-name" class="w-fit">
-        <UInput v-if="currentProject" v-model="currentProject.title" />
-      </UFormField>
-      <UButton class="ml-6" color="error" @click="removeProject(currentProjectId)">Delete project</UButton>
-    </UCard>
+    <template v-if="currentProject">
 
+      <UCard :ui="{body: 'flex'}">
+        <UFormField orientation="horizontal" label="Project name" name="project-name" class="w-fit">
+          <UInput v-model="currentProject.title" />
+        </UFormField>
+        <UButton class="ml-6" color="error" @click="removeProject(currentProjectId)">Delete project</UButton>
+      </UCard>
+  
       <ComponentForm
-        v-for="(component, i) in currentProject?.components"
+        v-for="(component, i) in currentProject.components"
         :key="i"
         v-model:component-title="component.componentTitle"
         v-model:fields="component.fields"
       />
-
+  
       <UButton @click="addComponent()" class="mt-4" variant="outline">Add component</UButton>
+      
+    </template>
+  
+    <div class="mt-6">
+      <UButton @click="save()" class="w-64 justify-center">Save</UButton>
 
-      <div class="mt-6">
-        <UButton @click="save()" class="w-64 justify-center">Save</UButton>
+      <UModal :ui="{content: 'max-w-full min-w-lg w-max'}">
+        <UButton @click="exportComponents()" class="ml-2">Import / Export</UButton>
 
-        <UModal :ui="{content: 'max-w-full min-w-lg w-max'}">
-          <UButton @click="exportComponents()" class="ml-2">Import / Export</UButton>
+        <template #header>
+          <URadioGroup variant="table" orientation="horizontal" :items="exportViewTypes" v-model="selectedExportViewType" />
+        </template>
+        <template #body>
 
-          <template #header>
-            <URadioGroup variant="table" orientation="horizontal" :items="exportViewTypes" v-model="selectedExportViewType" />
-          </template>
-          <template #body>
+          <ViewComponents v-if="selectedExportViewType === 'View'" :components="currentProject?.components ?? []" />
+          <UTextarea v-if="selectedExportViewType === 'JSON'" class="w-full" size="sm" :rows="5" autoresize v-model="importExportInput" />
+          
+        </template>
+        <template #footer="{close}" v-if="selectedExportViewType === 'JSON'">
+          <UButton @click="importComponents(); close()">Import</UButton>
+        </template>
+      </UModal>
 
-            <ViewComponents v-if="selectedExportViewType === 'View'" :components="currentProject?.components ?? []" />
-            <UTextarea v-if="selectedExportViewType === 'JSON'" class="w-full" size="sm" :rows="5" autoresize v-model="importExportInput" />
-            
-          </template>
-          <template #footer="{close}" v-if="selectedExportViewType === 'JSON'">
-            <UButton @click="importComponents(); close()">Import</UButton>
-          </template>
-        </UModal>
-
-        <UButton @click="clear()" color="error" class="ml-4">Clear this project</UButton>
-      </div>
+      <UButton @click="clear()" v-if="currentProject" color="error" class="ml-4">Clear this project</UButton>
+    </div>
   </div>
 </template>
