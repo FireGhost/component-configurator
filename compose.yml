@@ -11,4 +11,4 @@ services:
       - "bash"
       - "-c"
       - "npm install --verbose
-         && npm run dev"
+        && npm run dev"

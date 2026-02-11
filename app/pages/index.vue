@@ -1,27 +1,33 @@
 <script setup lang="ts">
-const projects = ref<{
-  title: string,
-  components: {
-    componentTitle: string,
-    fields: {
-      fieldName: string,
-      fieldTypeName: string,
-      fieldParametersValues: {[key: string]: string},
-    }[],
-  }[],
-}[]>([{
-  title: 'No title',
-  components: [],
-}]);
+const projects = ref<
+  {
+    title: string;
+    components: {
+      componentTitle: string;
+      fields: {
+        fieldName: string;
+        fieldTypeName: string;
+        fieldParametersValues: { [key: string]: string };
+      }[];
+    }[];
+  }[]
+>([
+  {
+    title: "No title",
+    components: [],
+  },
+]);
 
 const currentProjectId = ref(0);
-const currentProject = computed(() => projects.value.at(currentProjectId.value));
+const currentProject = computed(() =>
+  projects.value.at(currentProjectId.value),
+);
 
-const importExportInput = ref('');
-const exportViewTypes = ['View', 'JSON'];
-const selectedExportViewType = ref('View');
+const importExportInput = ref("");
+const exportViewTypes = ["View", "JSON"];
+const selectedExportViewType = ref("View");
 
-const projectsFromStorage = localStorage.getItem('projects');
+const projectsFromStorage = localStorage.getItem("projects");
 if (projectsFromStorage) {
   projects.value = JSON.parse(projectsFromStorage);
 }
@@ -33,14 +39,14 @@ function addComponent() {
     const newFields = [];
     for (let i = 0; i < 5; i++) {
       newFields.push({
-        fieldName: '',
-        fieldTypeName: '',
+        fieldName: "",
+        fieldTypeName: "",
         fieldParametersValues: {},
       });
     }
 
     currentProject.value.components.push({
-      componentTitle: '',
+      componentTitle: "",
       fields: newFields,
     });
   }
@@ -49,7 +55,9 @@ function addComponent() {
 function trimInputs() {
   if (currentProject.value) {
     // Remove component with no title.
-    currentProject.value.components = currentProject.value.components.filter((component) => component.componentTitle);
+    currentProject.value.components = currentProject.value.components.filter(
+      (component) => component.componentTitle,
+    );
     // Remove fields with no title.
     currentProject.value.components.forEach((component) => {
       component.fields = component.fields.filter((field) => field.fieldName);
@@ -60,7 +68,7 @@ function trimInputs() {
 function save() {
   trimInputs();
   const projectsJson = JSON.stringify(projects.value);
-  localStorage.setItem('projects', projectsJson);
+  localStorage.setItem("projects", projectsJson);
   toast.add({ title: "Projects saved" });
 }
 
@@ -75,17 +83,16 @@ function importComponents() {
   if (currentProject.value) {
     try {
       currentProject.value.components = JSON.parse(importExportInput.value);
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e);
       toast.add({
-        title: 'There is a syntax error in the JSON provided',
+        title: "There is a syntax error in the JSON provided",
         color: "error",
       });
       return;
     }
     save();
-    toast.add({ title: 'Components imported' });
+    toast.add({ title: "Components imported" });
   }
 }
 
@@ -97,7 +104,7 @@ function clear() {
 
 function addProject() {
   projects.value.push({
-    title: 'New project',
+    title: "New project",
     components: [],
   });
   currentProjectId.value = projects.value.length - 1;
@@ -127,50 +134,85 @@ function removeProject(projectId: number) {
         {{ project.title }}
       </UButton>
     </UFieldGroup>
-    
-    <UButton class="ml-4" color="success" @click="addProject()">Add project</UButton>
+
+    <UButton class="ml-4" color="success" @click="addProject()"
+      >Add project</UButton
+    >
 
     <template v-if="currentProject">
-
-      <UCard :ui="{body: 'flex'}">
-        <UFormField orientation="horizontal" label="Project name" name="project-name" class="w-fit">
+      <UCard :ui="{ body: 'flex' }">
+        <UFormField
+          orientation="horizontal"
+          label="Project name"
+          name="project-name"
+          class="w-fit"
+        >
           <UInput v-model="currentProject.title" />
         </UFormField>
-        <UButton class="ml-6" color="error" @click="removeProject(currentProjectId)">Delete project</UButton>
+        <UButton
+          class="ml-6"
+          color="error"
+          @click="removeProject(currentProjectId)"
+          >Delete project</UButton
+        >
       </UCard>
-  
+
       <ComponentForm
         v-for="(component, i) in currentProject.components"
         :key="i"
         v-model:component-title="component.componentTitle"
         v-model:fields="component.fields"
       />
-  
-      <UButton @click="addComponent()" class="mt-4" variant="outline">Add component</UButton>
-      
+
+      <UButton @click="addComponent()" class="mt-4" variant="outline"
+        >Add component</UButton
+      >
     </template>
-  
+
     <div class="mt-6">
       <UButton @click="save()" class="w-64 justify-center">Save</UButton>
 
-      <UModal :ui="{content: 'max-w-full min-w-lg w-max'}">
-        <UButton @click="exportComponents()" class="ml-2">Import / Export</UButton>
+      <UModal :ui="{ content: 'max-w-full min-w-lg w-max' }">
+        <UButton @click="exportComponents()" class="ml-2"
+          >Import / Export</UButton
+        >
 
         <template #header>
-          <URadioGroup variant="table" orientation="horizontal" :items="exportViewTypes" v-model="selectedExportViewType" />
+          <URadioGroup
+            variant="table"
+            orientation="horizontal"
+            :items="exportViewTypes"
+            v-model="selectedExportViewType"
+          />
         </template>
         <template #body>
-
-          <ViewComponents v-if="selectedExportViewType === 'View'" :components="currentProject?.components ?? []" />
-          <UTextarea v-if="selectedExportViewType === 'JSON'" class="w-full" size="sm" :rows="5" autoresize v-model="importExportInput" />
-          
+          <ViewComponents
+            v-if="selectedExportViewType === 'View'"
+            :components="currentProject?.components ?? []"
+          />
+          <UTextarea
+            v-if="selectedExportViewType === 'JSON'"
+            class="w-full"
+            size="sm"
+            :rows="5"
+            autoresize
+            v-model="importExportInput"
+          />
         </template>
-        <template #footer="{close}" v-if="selectedExportViewType === 'JSON'">
-          <UButton @click="importComponents(); close()">Import</UButton>
+        <template #footer="{ close }" v-if="selectedExportViewType === 'JSON'">
+          <UButton
+            @click="
+              importComponents();
+              close();
+            "
+            >Import</UButton
+          >
         </template>
       </UModal>
 
-      <UButton @click="clear()" v-if="currentProject" color="error" class="ml-4">Clear this project</UButton>
+      <UButton @click="clear()" v-if="currentProject" color="error" class="ml-4"
+        >Clear this project</UButton
+      >
     </div>
   </div>
 </template>
