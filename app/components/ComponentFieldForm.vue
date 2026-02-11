@@ -27,10 +27,10 @@ if (localStorageItem) {
 
     <UFormField label="Field type" name="field-type" class="mb-2">
       <USelect
+        v-model="fieldTypeName"
         :items="fieldTypes"
         value-key="name"
         label-key="name"
-        v-model="fieldTypeName"
         class="w-full"
       />
     </UFormField>
@@ -39,6 +39,7 @@ if (localStorageItem) {
       v-for="(fieldParameter, i) in fieldTypes.find(
         (fieldType) => fieldType.name === fieldTypeName,
       )?.parameters"
+      :key="i"
       :label="fieldParameter"
       :name="`${fieldName}-${fieldParameter}-${i}`"
     >

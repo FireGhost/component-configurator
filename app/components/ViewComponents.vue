@@ -22,7 +22,7 @@ const { components } = defineProps<{
 
       <ul class="list-disc pl-4">
         <li v-for="(field, fieldIndex) in component.fields" :key="fieldIndex">
-          {{ field.fieldName }}: <{{ field.fieldTypeName }}>
+          {{ field.fieldName }}: &lt;{{ field.fieldTypeName }}&gt;
 
           <template
             v-for="(

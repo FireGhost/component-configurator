@@ -135,9 +135,9 @@ function removeProject(projectId: number) {
       </UButton>
     </UFieldGroup>
 
-    <UButton class="ml-4" color="success" @click="addProject()"
-      >Add project</UButton
-    >
+    <UButton class="ml-4" color="success" @click="addProject()">
+      Add project
+    </UButton>
 
     <template v-if="currentProject">
       <UCard :ui="{ body: 'flex' }">
@@ -153,8 +153,9 @@ function removeProject(projectId: number) {
           class="ml-6"
           color="error"
           @click="removeProject(currentProjectId)"
-          >Delete project</UButton
         >
+          Delete project
+        </UButton>
       </UCard>
 
       <ComponentForm
@@ -164,25 +165,25 @@ function removeProject(projectId: number) {
         v-model:fields="component.fields"
       />
 
-      <UButton @click="addComponent()" class="mt-4" variant="outline"
-        >Add component</UButton
-      >
+      <UButton class="mt-4" variant="outline" @click="addComponent()">
+        Add component
+      </UButton>
     </template>
 
     <div class="mt-6">
-      <UButton @click="save()" class="w-64 justify-center">Save</UButton>
+      <UButton class="w-64 justify-center" @click="save()">Save</UButton>
 
       <UModal :ui="{ content: 'max-w-full min-w-lg w-max' }">
-        <UButton @click="exportComponents()" class="ml-2"
-          >Import / Export</UButton
-        >
+        <UButton class="ml-2" @click="exportComponents()">
+          Import / Export
+        </UButton>
 
         <template #header>
           <URadioGroup
+            v-model="selectedExportViewType"
             variant="table"
             orientation="horizontal"
             :items="exportViewTypes"
-            v-model="selectedExportViewType"
           />
         </template>
         <template #body>
@@ -192,27 +193,33 @@ function removeProject(projectId: number) {
           />
           <UTextarea
             v-if="selectedExportViewType === 'JSON'"
+            v-model="importExportInput"
             class="w-full"
             size="sm"
             :rows="5"
             autoresize
-            v-model="importExportInput"
           />
         </template>
-        <template #footer="{ close }" v-if="selectedExportViewType === 'JSON'">
+        <template v-if="selectedExportViewType === 'JSON'" #footer="{ close }">
           <UButton
             @click="
               importComponents();
               close();
             "
-            >Import</UButton
           >
+            Import
+          </UButton>
         </template>
       </UModal>
 
-      <UButton @click="clear()" v-if="currentProject" color="error" class="ml-4"
-        >Clear this project</UButton
+      <UButton
+        v-if="currentProject"
+        color="error"
+        class="ml-4"
+        @click="clear()"
       >
+        Clear this project
+      </UButton>
     </div>
   </div>
 </template>

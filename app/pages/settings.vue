@@ -69,22 +69,22 @@ function importSettings() {
       </UCard>
 
       <UCard>
-        <UButton @click="addField()" variant="outline">Add field type</UButton>
+        <UButton variant="outline" @click="addField()">Add field type</UButton>
       </UCard>
     </div>
 
-    <UButton @click="save()" class="w-32 justify-center mr-4">Save</UButton>
+    <UButton class="w-32 justify-center mr-4" @click="save()">Save</UButton>
 
     <UModal>
       <UButton @click="exportSettings()">Import / Export</UButton>
 
       <template #body>
         <UTextarea
+          v-model="importExportInput"
           class="w-full"
           size="sm"
           :rows="5"
           autoresize
-          v-model="importExportInput"
         />
       </template>
       <template #footer="{ close }">
