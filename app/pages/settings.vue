@@ -1,20 +1,22 @@
 <script setup lang="ts">
-const fieldTypes = ref<{
-  name: string,
-  parameters: string[],
-}[]>([]);
-const importExportInput = ref('');
+const fieldTypes = ref<
+  {
+    name: string;
+    parameters: string[];
+  }[]
+>([]);
+const importExportInput = ref("");
 
 const toast = useToast();
 
-const localStorageItem = localStorage.getItem('fieldTypes');
+const localStorageItem = localStorage.getItem("fieldTypes");
 if (localStorageItem) {
   fieldTypes.value = JSON.parse(localStorageItem);
 }
 
 function addField() {
   fieldTypes.value.push({
-    name: '',
+    name: "",
     parameters: [],
   });
 }
@@ -22,15 +24,17 @@ function addField() {
 function trimInputs() {
   fieldTypes.value = fieldTypes.value.filter((fieldType) => fieldType.name);
   fieldTypes.value.forEach((fieldType) => {
-    fieldType.parameters = fieldType.parameters.filter((fieldParameter) => fieldParameter);
+    fieldType.parameters = fieldType.parameters.filter(
+      (fieldParameter) => fieldParameter,
+    );
   });
 }
 
 function save() {
   trimInputs();
   const fieldTypesJson = JSON.stringify(fieldTypes.value);
-  localStorage.setItem('fieldTypes', fieldTypesJson);
-  toast.add({ title: 'Settings saved' });
+  localStorage.setItem("fieldTypes", fieldTypesJson);
+  toast.add({ title: "Settings saved" });
 }
 
 function exportSettings() {
@@ -41,17 +45,16 @@ function exportSettings() {
 function importSettings() {
   try {
     fieldTypes.value = JSON.parse(importExportInput.value);
-  }
-  catch (e) {
+  } catch (e) {
     console.log(e);
     toast.add({
-      title: 'There is a syntax error in the JSON provided',
+      title: "There is a syntax error in the JSON provided",
       color: "error",
     });
     return;
   }
   save();
-  toast.add({ title: 'Settings imported' });
+  toast.add({ title: "Settings imported" });
 }
 </script>
 
@@ -66,20 +69,32 @@ function importSettings() {
       </UCard>
 
       <UCard>
-        <UButton @click="addField()" variant="outline">Add field type</UButton>
+        <UButton variant="outline" @click="addField()">Add field type</UButton>
       </UCard>
     </div>
 
-    <UButton @click="save()" class="w-32 justify-center mr-4">Save</UButton>
+    <UButton class="w-32 justify-center mr-4" @click="save()">Save</UButton>
 
     <UModal>
       <UButton @click="exportSettings()">Import / Export</UButton>
 
       <template #body>
-        <UTextarea class="w-full" size="sm" :rows="5" autoresize v-model="importExportInput" />
+        <UTextarea
+          v-model="importExportInput"
+          class="w-full"
+          size="sm"
+          :rows="5"
+          autoresize
+        />
       </template>
-      <template #footer="{close}">
-        <UButton @click="importSettings(); close()">Import</UButton>
+      <template #footer="{ close }">
+        <UButton
+          @click="
+            importSettings();
+            close();
+          "
+          >Import</UButton
+        >
       </template>
     </UModal>
   </div>

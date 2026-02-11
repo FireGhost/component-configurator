@@ -1,24 +1,23 @@
 <script setup lang="ts">
-import type { NavigationMenuItem } from '@nuxt/ui';
+import type { NavigationMenuItem } from "@nuxt/ui";
 
 const menuItemsRight = ref<NavigationMenuItem[]>([
   {
     label: "Settings",
     to: "/settings",
-  }
+  },
 ]);
 
 const menuItemsCenter = ref<NavigationMenuItem[]>([
   {
     label: "Configurator",
     to: "/",
-  }
+  },
 ]);
 </script>
 
 <template>
   <UApp>
-
     <UHeader title="Component configurator" to="/">
       <UNavigationMenu :items="menuItemsCenter" />
       <template #right>
@@ -31,6 +30,5 @@ const menuItemsCenter = ref<NavigationMenuItem[]>([
         <NuxtPage />
       </UContainer>
     </UMain>
-
   </UApp>
 </template>

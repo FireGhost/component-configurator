@@ -1,15 +1,17 @@
 <script setup lang="ts">
-const componentTitle = defineModel<string>('componentTitle', {default: ''});
-const fields = defineModel<{
-  fieldName: string,
-  fieldTypeName: string,
-  fieldParametersValues: {[key: string]: string},
-}[]>('fields', {default: []});
+const componentTitle = defineModel<string>("componentTitle", { default: "" });
+const fields = defineModel<
+  {
+    fieldName: string;
+    fieldTypeName: string;
+    fieldParametersValues: { [key: string]: string };
+  }[]
+>("fields", { default: [] });
 
 function addField() {
   fields.value.push({
-    fieldName: '',
-    fieldTypeName: '',
+    fieldName: "",
+    fieldTypeName: "",
     fieldParametersValues: {},
   });
 }
@@ -22,7 +24,7 @@ function addField() {
         <UInput v-model="componentTitle" class="w-80" />
       </UFormField>
     </template>
-    
+
     <div class="flex flex-wrap">
       <ComponentFieldForm
         v-for="(field, i) in fields"
@@ -32,7 +34,9 @@ function addField() {
         v-model:field-type-name="field.fieldTypeName"
       />
     </div>
-  
-    <UButton @click="addField()" class="mt-4" variant="outline">Add field</UButton>
+
+    <UButton class="mt-4" variant="outline" @click="addField()">
+      Add field
+    </UButton>
   </UCard>
 </template>
