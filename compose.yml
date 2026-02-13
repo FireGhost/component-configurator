@@ -11,7 +11,7 @@ services:
       - "bash"
       - "-c"
       - "npm install --verbose
-         && npm run dev"
+        && npm run dev"
 
   playwright:
     image: mcr.microsoft.com/playwright:v1.58.2
