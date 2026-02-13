@@ -1,14 +1,19 @@
-FROM node:24 AS build
+ARG NODE_VERSION=24
+
+FROM node:${NODE_VERSION} AS build
 
 WORKDIR /app
 
-COPY . /app
+COPY --exclude=node_modules . /app
 RUN npm ci --verbose
 RUN npm run build --verbose
 
-FROM node:24-alpine AS prod
+FROM node:${NODE_VERSION}-alpine AS prod
 
 WORKDIR /app
+
+ENV NODE_ENV=production
+EXPOSE 3000
 
 COPY --from=build /app/.output/ /app
 
