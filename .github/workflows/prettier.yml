@@ -6,7 +6,7 @@ permissions:
 on: pull_request
 
 jobs:
-  eslint:
+  prettier:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
