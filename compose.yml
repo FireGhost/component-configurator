@@ -14,7 +14,7 @@ services:
         && npm run dev"
 
   playwright:
-    image: mcr.microsoft.com/playwright:v1.58.2
+    image: mcr.microsoft.com/playwright:v1.59.0
     init: true
     ipc: "host"
     user: "ubuntu"
